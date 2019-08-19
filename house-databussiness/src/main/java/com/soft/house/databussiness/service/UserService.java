@@ -27,6 +27,9 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private MailService mailService;
+
     /**
      * 新增用户
      * 1.插入用户数据到数据库，状态为非激活；密码用MD5加盐；保存头像到本地
@@ -49,7 +52,8 @@ public class UserService {
         BeanHelper.onInsert(user);
         user.setEnable(0);
         userMapper.insert(user);
-        //mailService.registerNotify(account.getEmail());
+        /** 给用户发送邮件 */
+        mailService.registerNotify(user.getEmail());
         return true;
     }
 }

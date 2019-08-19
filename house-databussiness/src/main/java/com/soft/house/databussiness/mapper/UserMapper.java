@@ -12,4 +12,11 @@ public interface UserMapper {
      * @return
      */
     public int insert(User user);
+
+    /**
+     * 根据邮箱删除用户
+     * @param email
+     * @return
+     */
+    public int delete(String email);
 }

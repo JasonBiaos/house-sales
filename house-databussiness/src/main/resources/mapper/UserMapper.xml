@@ -54,6 +54,7 @@
                 )
    </insert>
 
+    <!--根据邮箱删除用户-->
     <delete id="delete">
     delete from user
     where  email=#{email}

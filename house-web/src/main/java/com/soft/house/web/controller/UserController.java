@@ -2,6 +2,8 @@ package com.soft.house.web.controller;
 
 import com.soft.house.common.model.User;
 import com.soft.house.common.result.ResultMsg;
+import com.soft.house.databussiness.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class UserController {
 
+    @Autowired
+    private UserService userService;
     /**
      * 注册提交流程：1.注册验证 2.发送邮件 3.验证失败重定向到注册页面
      * 是否为注册页获取：根据account对象为依据判断是否为注册页获取请求
@@ -35,7 +39,8 @@ public class UserController {
         /** 用户表单验证 */
         ResultMsg resultMsg = UserHelper.validate(user);
 
-        if (resultMsg.isSuccess()){
+        if (resultMsg.isSuccess()&& userService.addUser(user)){
+            modelMap.put("email",user.getEmail());
             return "/user/accounts/registerSubmit";
         }else {
             return "redirect:/accounts/register?" + resultMsg.asUrlParams();
