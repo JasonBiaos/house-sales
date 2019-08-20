@@ -17,8 +17,8 @@
     </settings>
     
     
-    <!--<typeAliases>-->
-        <!--<typeAlias type="com.soft.house.common.model.User" alias="user" />-->
+    <typeAliases>
+        <typeAlias type="com.soft.house.common.model.User" alias="user" />
         <!--<typeAlias type="com.soft.house.common.model.Agency" alias="agency"/>-->
         <!--<typeAlias type="com.soft.house.common.model.House" alias="house" />-->
         <!--<typeAlias type="com.soft.house.common.model.City" alias="city" />-->
@@ -29,15 +29,15 @@
         <!--<typeAlias type="com.soft.house.common.model.User"        alias="user"/>-->
         <!--<typeAlias type="com.soft.house.common.model.UserMsg"     alias="userMsg"/>-->
         <!--<typeAlias type="com.soft.house.common.model.HouseUser"     alias="houseUser"/>-->
-    <!---->
-    <!--</typeAliases>-->
-    <!---->
-    <!--<mappers>-->
-       <!--<mapper resource="mapper/user.xml" />-->
+
+    </typeAliases>
+
+    <mappers>
+       <mapper resource="mapper/user.xml" />
        <!--<mapper resource="mapper/blog.xml"/> -->
        <!--<mapper resource="mapper/house.xml" />-->
        <!--<mapper resource="mapper/comment.xml"/> -->
        <!--<mapper resource="mapper/agency.xml" />-->
-    <!--</mappers>-->
+    </mappers>
 
 </configuration>
