@@ -59,7 +59,7 @@ public class FileService {
         /** Instant.now().getEpochSecond():获取当前以秒为单位的时间戳*/
         File newFile = new File(filePath + "/" + Instant.now().getEpochSecond() + "/" + file.getOriginalFilename());
         if (!newFile.exists()){
-            newFile.getParentFile().mkdir();
+            newFile.getParentFile().mkdirs();
             newFile.createNewFile();
         }
         /** 以字节的形式写入文件 */

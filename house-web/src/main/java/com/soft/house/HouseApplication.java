@@ -1,4 +1,4 @@
-package com.soft.house.web;
+package com.soft.house;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

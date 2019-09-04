@@ -33,7 +33,7 @@
     </typeAliases>
 
     <mappers>
-       <mapper resource="mapper/user.xml" />
+       <mapper resource="mapper/UserMapper.xml" />
        <!--<mapper resource="mapper/blog.xml"/> -->
        <!--<mapper resource="mapper/house.xml" />-->
        <!--<mapper resource="mapper/comment.xml"/> -->

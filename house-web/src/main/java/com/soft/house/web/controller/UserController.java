@@ -21,6 +21,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
     /**
      * 注册提交流程：1.注册验证 2.发送邮件 3.验证失败重定向到注册页面
      * 是否为注册页获取：根据account对象为依据判断是否为注册页获取请求
