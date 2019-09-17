@@ -14,7 +14,7 @@
         <!-- Breadcrumb -->
         <div class="container">
             <ol class="breadcrumb">
-                <li><a href="#">Home</a></li>
+                <li><a href="#">主页</a></li>
                 <li class="active">注册</li>
             </ol>
         </div>
