@@ -6,6 +6,7 @@ import com.soft.house.common.utils.BeanHelper;
 import com.soft.house.common.utils.HashUtils;
 import com.soft.house.databussiness.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,9 @@ public class UserService {
 
     @Autowired
     private MailService mailService;
+
+    @Value("${file.prefix}")
+    private String imgPrefix;
 
     /**
      * 新增用户
@@ -64,5 +68,36 @@ public class UserService {
      */
     public boolean enable(String key){
         return mailService.enable(key);
+    }
+
+    /**
+     * 用户名密码验证
+     * @param username
+     * @param password
+     * @return
+     */
+    public User auth(String username, String password){
+        User user = new User();
+        user.setEmail(username);
+        user.setPasswd(HashUtils.encryPassword(password));
+        user.setEnable(1);
+        List<User> list = getUserByQuery(user);
+        if (!list.isEmpty()){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据条件查询用户信息
+     * @param user
+     * @return
+     */
+    public List<User> getUserByQuery(User user){
+        List<User> list = userMapper.selectUsersByQuery(user);
+        list.forEach(u ->{
+            u.setAvatar(imgPrefix + u.getAvatar());
+        });
+        return list;
     }
 }

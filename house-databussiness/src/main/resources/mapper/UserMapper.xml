@@ -6,6 +6,7 @@
      select name,phone,email from user
    </select>
 
+    <!--根据条件查询用户信息-->
     <select id="selectUsersByQuery" resultType="user">
         select * from user
         <where>

@@ -1,5 +1,6 @@
 package com.soft.house.databussiness.service;
 
+import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
@@ -15,6 +16,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,14 +50,22 @@ public class MailService {
      */
     private final Cache<String,String> registerCache =
             CacheBuilder.newBuilder().maximumSize(100).expireAfterAccess(15, TimeUnit.MINUTES)
-                    .removalListener(new RemovalListener<String, String>() {
+                    .removalListener(new RemovalListener<String, String>() {//设置监听事件，就是在 删除key的时候触发这个事件
                         /**
                          * 如果超时执行删除用户操作
                          * @param removalNotification
                          */
                         @Override
                         public void onRemoval(RemovalNotification<String, String> removalNotification) {
-                            userMapper.delete(removalNotification.getValue());
+                            String email = removalNotification.getValue();
+                            User user = new User();
+                            user.setEmail(email);
+                            List<User> targetUser = userMapper.selectUsersByQuery(user);
+                            /** 代码优化: 在删除前首先判断用户是否已经被激活，对于未激活的用户进行移除操作*/
+                            if (!targetUser.isEmpty() && Objects.equal(targetUser.get(0).getEnable(),0)){
+                                    userMapper.delete(email);
+                            }
+
                         }
                     }).build();
 
@@ -108,6 +118,7 @@ public class MailService {
         User updateUser = new User();
         updateUser.setEmail(email);
         updateUser.setEnable(1);
+        /** 根据邮箱更新用户 */
         userMapper.update(updateUser);
         registerCache.invalidate(key);
         return true;

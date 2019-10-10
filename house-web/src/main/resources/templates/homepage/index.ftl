@@ -79,7 +79,7 @@
                                     </select>
                                 </div><!-- /.form-group -->
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-default">Search Now</button>
+                                    <button type="submit" class="btn btn-default">开始搜索</button>
                                 </div><!-- /.form-group -->
                             </form><!-- /#form-map -->
                         </div><!-- /.search-box.map -->

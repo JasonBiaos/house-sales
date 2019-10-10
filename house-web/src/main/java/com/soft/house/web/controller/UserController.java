@@ -1,13 +1,17 @@
 package com.soft.house.web.controller;
 
+import com.soft.house.common.constants.CommonConstants;
 import com.soft.house.common.model.User;
 import com.soft.house.common.result.ResultMsg;
 import com.soft.house.databussiness.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @ClassName: UserController
@@ -33,7 +37,7 @@ public class UserController {
     public String accountsRegister(User user,ModelMap modelMap){
 
         /** 用户为空跳转到注册页面 */
-        if (StringUtils.isEmpty(user) || user.getName() == null){
+        if (user == null || user.getName() == null){
             return "/user/accounts/register";
         }
 
@@ -64,4 +68,47 @@ public class UserController {
         }
     }
 
+    /********************************************************登录流程*****************************************************/
+
+    /**
+     * 用户登录接口
+     * @param request
+     * @return
+     */
+    @RequestMapping("/accounts/signin")
+    public String signin(HttpServletRequest request){
+        /**获取用户名、密码、目标页*/
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String target = request.getParameter("target");
+        /**用户名和密码为空跳转到登录页*/
+        if (username == null || password == null){
+            request.setAttribute("target",target);
+            return "/user/accounts/signin";
+        }
+        /**用户名密码验证*/
+        User user = userService.auth(username,password);
+        if (user == null){
+            return "redirect:/accounts/signin?" + "target=" + target + "&username=" + username + "&"
+                    + ResultMsg.errorMsg("用户名或密码错误").asUrlParams();
+        }else {
+            HttpSession session = request.getSession(true);
+            session.setAttribute(CommonConstants.USER_ATTRIBUTE,user);
+            session.setAttribute(CommonConstants.PLAIN_USER_ATTRIBUTE,user);
+            return StringUtils.isNoneBlank(target) ? "redirect:" + target : "redirect:/index";
+        }
+    }
+
+    /**
+     * 注销用户
+     * @param request
+     * @return
+     */
+    @RequestMapping("accounts/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession(true);
+        /**注销session*/
+        session.invalidate();
+        return "redirect:/index";
+    }
 }

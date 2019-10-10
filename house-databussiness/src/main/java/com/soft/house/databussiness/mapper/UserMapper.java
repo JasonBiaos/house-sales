@@ -3,6 +3,8 @@ package com.soft.house.databussiness.mapper;
 import com.soft.house.common.model.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
 
@@ -26,4 +28,11 @@ public interface UserMapper {
      * @return
      */
     public int update(User updateUser);
+
+    /**
+     * 根据条件查询用户信息
+     * @param user
+     * @return
+     */
+    public List<User> selectUsersByQuery(User user);
 }
