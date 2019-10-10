@@ -48,4 +48,20 @@ public class UserController {
         }
 
     }
+
+    /**
+     * 验证邮箱是否激活
+     * @param key
+     * @return
+     */
+    @RequestMapping("accounts/verify")
+    public String verify(String key){
+        boolean result = userService.enable(key);
+        if (result){
+            return "redirect:/index?" + ResultMsg.successMsg("激活成功").asUrlParams();
+        }else {
+            return "redirect:/accounts/register?" + ResultMsg.errorMsg("激活失败,请确认链接是否过期");
+        }
+    }
+
 }

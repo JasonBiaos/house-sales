@@ -19,4 +19,11 @@ public interface UserMapper {
      * @return
      */
     public int delete(String email);
+
+    /**
+     * 更新用户
+     * @param updateUser
+     * @return
+     */
+    public int update(User updateUser);
 }

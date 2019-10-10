@@ -4,8 +4,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.soft.house.common.model.User;
 import com.soft.house.databussiness.mapper.UserMapper;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -93,4 +95,21 @@ public class MailService {
         mailSender.send(message);
     }
 
+    /**
+     * 验证邮箱是否激活
+     * @param key
+     * @return
+     */
+    public boolean enable(String key){
+        String email = registerCache.getIfPresent(key);
+        if (StringUtils.isBlank(email)){
+            return false;
+        }
+        User updateUser = new User();
+        updateUser.setEmail(email);
+        updateUser.setEnable(1);
+        userMapper.update(updateUser);
+        registerCache.invalidate(key);
+        return true;
+    }
 }

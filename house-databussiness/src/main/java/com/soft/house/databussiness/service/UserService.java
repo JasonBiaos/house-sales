@@ -56,4 +56,13 @@ public class UserService {
         mailService.registerNotify(user.getEmail());
         return true;
     }
+
+    /**
+     * 验证邮箱是否激活
+     * @param key
+     * @return
+     */
+    public boolean enable(String key){
+        return mailService.enable(key);
+    }
 }

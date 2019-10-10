@@ -60,6 +60,7 @@
     where  email=#{email}
    </delete>
 
+    <!--根据邮箱更新用户-->
     <update id="update">
         update user
         <set>
