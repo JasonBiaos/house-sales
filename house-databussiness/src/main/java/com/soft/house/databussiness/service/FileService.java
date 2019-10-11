@@ -1,5 +1,6 @@
 package com.soft.house.databussiness.service;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +23,7 @@ import java.util.List;
 @Service
 public class FileService {
 
-    @Value("${file.path:}")
+    @Value("${file.path}")
     private String filePath;
 
     /**
@@ -32,6 +33,9 @@ public class FileService {
      * @return
      */
     public List<String> getImgPaths(List<MultipartFile> files){
+        if (Strings.isNullOrEmpty(filePath)) {
+            filePath = getResourcePath();
+        }
         List<String> paths = Lists.newArrayList();
         files.forEach(file -> {
             File localFile = null;
@@ -65,5 +69,11 @@ public class FileService {
         /** 以字节的形式写入文件 */
         Files.write(file.getBytes(),newFile);
         return newFile;
+    }
+
+    public static String getResourcePath(){
+        File file = new File(".");
+        String absolutePath = file.getAbsolutePath();
+        return absolutePath;
     }
 }

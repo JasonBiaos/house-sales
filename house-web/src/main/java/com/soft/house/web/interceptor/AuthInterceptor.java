@@ -48,7 +48,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession(true);
         User user = (User) session.getAttribute(CommonConstants.USER_ATTRIBUTE);
         if (user != null){
-            UserContext.getUser();
+            UserContext.setUser(user);
         }
         return true;
     }

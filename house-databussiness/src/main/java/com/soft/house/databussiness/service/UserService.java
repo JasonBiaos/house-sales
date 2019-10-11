@@ -100,4 +100,10 @@ public class UserService {
         });
         return list;
     }
+
+    public void updateUser(User user,String email){
+        user.setEmail(email);
+        BeanHelper.onUpdate(user);
+        userMapper.update(user);
+    }
 }

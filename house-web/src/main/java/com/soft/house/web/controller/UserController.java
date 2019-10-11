@@ -3,6 +3,7 @@ package com.soft.house.web.controller;
 import com.soft.house.common.constants.CommonConstants;
 import com.soft.house.common.model.User;
 import com.soft.house.common.result.ResultMsg;
+import com.soft.house.common.utils.HashUtils;
 import com.soft.house.databussiness.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @ClassName: UserController
@@ -94,7 +96,7 @@ public class UserController {
         }else {
             HttpSession session = request.getSession(true);
             session.setAttribute(CommonConstants.USER_ATTRIBUTE,user);
-            session.setAttribute(CommonConstants.PLAIN_USER_ATTRIBUTE,user);
+            //session.setAttribute(CommonConstants.PLAIN_USER_ATTRIBUTE,user);
             return StringUtils.isNoneBlank(target) ? "redirect:" + target : "redirect:/index";
         }
     }
@@ -110,5 +112,51 @@ public class UserController {
         /**注销session*/
         session.invalidate();
         return "redirect:/index";
+    }
+
+    /***************************************************个人信息页************************************************/
+
+    /**
+     * 个人信息页展示及更新个人信息
+     * @param request
+     * @param user
+     * @param modelMap
+     * @return
+     */
+    @RequestMapping("/accounts/profile")
+    public String profile(HttpServletRequest request,User user,ModelMap modelMap){
+        if (user.getEmail() == null){
+            return "/user/accounts/profile";
+        }
+        userService.updateUser(user,user.getEmail());
+        User query = new User();
+        query.setEmail(user.getEmail());
+        List<User> userByQuery = userService.getUserByQuery(query);
+        request.getSession(true).setAttribute(CommonConstants.USER_ATTRIBUTE,userByQuery.get(0));
+
+        return "redirect:/accounts/profile?" + ResultMsg.successMsg("更新成功").asUrlParams();
+    }
+
+    /**
+     * 修改密码
+     * @param email
+     * @param password
+     * @param newPassword
+     * @param confirmPassword
+     * @param modelMap
+     * @return
+     */
+    @RequestMapping("accounts/changePassword")
+    public String changePassword(String email,String password,String newPassword,
+                                 String confirmPassword,ModelMap modelMap){
+        /**验证原有的用户名和密码*/
+        User user = userService.auth(email,password);
+        if (user == null || !confirmPassword.equals(newPassword)){
+            return "redirect:/accounts/profile?" + ResultMsg.errorMsg("密码错误或两次密码不一致！").asUrlParams();
+        }
+        User updateUser = new User();
+        updateUser.setPasswd(HashUtils.encryPassword(newPassword));
+        userService.updateUser(updateUser,email);
+        return "redirect:/accounts/profile?" + ResultMsg.successMsg("更新成功").asUrlParams();
     }
 }
